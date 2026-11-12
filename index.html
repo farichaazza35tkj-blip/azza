@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>✨ Salon Azza 🎀 | Game Makeover & Salon Lucu</title>
+  
+  <!-- Google Fonts: Fredoka, Quicksand, Caveat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --pink-primary: #ff5b94;
+      --pink-secondary: #ff85b3;
+      --pink-light: #ffe5ef;
+      --pink-card: #fff2f7;
+      --pink-accent: #ff2d75;
+      --bg-cream: #fff9fc;
+      --purple-soft: #d8b4fe;
+      --text-main: #4a2135;
+      --text-muted: #8c5770;
+      --white: #ffffff;
+      --shadow-sm: 0 4px 12px rgba(255, 91, 148, 0.15);
+      --shadow-md: 0 8px 24px rgba(255, 91, 148, 0.22);
+      --radius-sm: 14px;
+      --radius-md: 22px;
+      --radius-lg: 30px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at 10% 20%, #ffeaf3 0%, #ffd4e5 45%, #ffe6f0 90%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Floating Sparkles Canvas */
+    #fx-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* Top Bar / Header */
+    header {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid #ffccd9;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(255, 91, 148, 0.12);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .salon-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .salon-logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #ff5b94, #ff85b3);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 4px 12px rgba(255, 91, 148, 0.35);
+      animation: gentle-pulse 2s infinite ease-in-out;
+    }
+
+    .salon-title {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--pink-primary);
+      text-shadow: 1px 1px 0 #ffe0ea;
+    }
+
+    .salon-title span {
+      color: #ff2d75;
+      font-size: 1.15rem;
+      font-family: 'Caveat', cursive;
+      margin-left: 4px;
+    }
+
+    .top-stats {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat-badge {
+      background: #fff;
+      border: 2px solid #ffccd8;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #c2185b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: #ffffff;
+      border: 2px solid #ffccd8;
+      color: var(--pink-primary);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .icon-btn:hover {
+      background: var(--pink-light);
+      transform: scale(1.08);
+      border-color: var(--pink-primary);
+    }
+
+    /* Main Game Layout */
+    .game-container {
+      max-width: 1240px;
+      margin: 18px auto;
+      padding: 0 16px;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 440px 1fr;
+      gap: 24px;
+      align-items: start;
+      width: 100%;
+    }
+
+    /* Character Mirror / Stage (Left Side) */
+    .stage-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 3px solid #ffccd9;
+      box-shadow: var(--shadow-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stage-decor-top {
+      position: absolute;
+      top: -15px;
+      background: linear-gradient(90deg, #ff6b9d, #ffa5ba);
+      color: white;
+      font-family: 'Fredoka', cursive;
+      padding: 6px 24px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 10px rgba(255, 91, 148, 0.25);
+    }
+
+    /* Character Display Container */
+    .character-viewport {
+      width: 380px;
+      height: 480px;
+      margin-top: 15px;
+      border-radius: 24px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 3px solid #ffe0ea;
+      background: radial-gradient(circle, #fff5f9 0%, #ffebf3 70%, #ffdbe9 100%);
+      box-shadow: inset 0 0 30px rgba(255, 133, 179, 0.2);
+      transition: background 0.4s ease;
+    }
+
+    /* SVG Character Styling */
+    .character-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 10px 14px rgba(255, 91, 148, 0.16));
+    }
+
+    /* Customer Speech Bubble */
+    .speech-bubble {
+      margin-top: 14px;
+      width: 100%;
+      background: #fff5f8;
+      border: 2px dashed #ff9ebd;
+      border-radius: 18px;
+      padding: 12px 18px;
+      font-size: 0.92rem;
+      line-height: 1.4;
+      color: #6d2443;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+    }
+
+    .speech-bubble i {
+      font-size: 1.3rem;
+      color: var(--pink-primary);
+    }
+
+    .speech-bubble .bubble-text {
+      font-weight: 600;
+    }
+
+    /* Stage Quick Action Buttons */
+    .stage-actions {
+      display: flex;
+      width: 100%;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .btn-act {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn-random {
+      background: #fdf2f8;
+      color: #be185d;
+      border: 2px solid #fbcfe8;
+    }
+
+    .btn-random:hover {
+      background: #fce7f3;
+      transform: translateY(-2px);
+    }
+
+    .btn-finish {
+      background: linear-gradient(135deg, #ff5b94, #ff85b3);
+      color: white;
+      box-shadow: 0 4px 14px rgba(255, 91, 148, 0.4);
+    }
+
+    .btn-finish:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(255, 91, 148, 0.5);
+    }
+
+    /* Salon Workstation / Tabs (Right Side) */
+    .workstation-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 3px solid #ffccd9;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 600px;
+    }
+
+    /* Category Navigation */
+    .station-nav {
+      display: flex;
+      background: #fff5f8;
+      border-bottom: 2px solid #ffccd9;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .station-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 110px;
+      padding: 14px 10px;
+      background: transparent;
+      border: none;
+      font-family: 'Fredoka', cursive;
+      font-size: 0.96rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.25s ease;
+      border-bottom: 4px solid transparent;
+    }
+
+    .tab-btn i {
+      font-size: 1.25rem;
+    }
+
+    .tab-btn:hover {
+      color: var(--pink-primary);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .tab-btn.active {
+      color: var(--pink-primary);
+      background: var(--white);
+      border-bottom-color: var(--pink-primary);
+      font-weight: 700;
+    }
+
+    /* Subcategory Pill Bar */
+    .subnav-bar {
+      display: flex;
+      gap: 8px;
+      padding: 14px 20px 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .subnav-pill {
+      background: #fff0f5;
+      border: 1.5px solid #ffccd8;
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .subnav-pill:hover,
+    .subnav-pill.active {
+      background: var(--pink-primary);
+      color: white;
+      border-color: var(--pink-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(255, 91, 148, 0.25);
+    }
+
+    /* Palette Selection (Hair Color, Lipstick, etc) */
+    .color-palette-box {
+      padding: 6px 20px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-bottom: 1px dashed #ffd1dc;
+    }
+
+    .color-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .color-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .color-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.2);
+    }
+
+    .color-swatch.active {
+      transform: scale(1.25);
+      box-shadow: 0 0 0 2.5px var(--pink-primary);
+    }
+
+    /* Item Grid Container */
+    .item-grid-viewport {
+      padding: 16px 20px 24px;
+      flex: 1;
+      overflow-y: auto;
+      max-height: 440px;
+    }
+
+    .item-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+      gap: 14px;
+    }
+
+    .item-card {
+      background: #ffffff;
+      border: 2px solid #ffe1ea;
+      border-radius: var(--radius-md);
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      min-height: 100px;
+      box-shadow: 0 4px 10px rgba(255, 91, 148, 0.05);
+    }
+
+    .item-card:hover {
+      border-color: var(--pink-primary);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 8px 18px rgba(255, 91, 148, 0.18);
+    }
+
+    .item-card.active {
+      border-color: var(--pink-primary);
+      background: #fff5f8;
+      box-shadow: 0 0 0 3px rgba(255, 91, 148, 0.22);
+    }
+
+    .item-icon {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+      transition: transform 0.2s ease;
+    }
+
+    .item-card:hover .item-icon {
+      transform: scale(1.15);
+    }
+
+    .item-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #55273d;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .item-check {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--pink-primary);
+      color: white;
+      font-size: 0.65rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .item-card.active .item-check {
+      display: flex;
+    }
+
+    /* Modal Styling (Snapshot & Mission) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(45, 15, 27, 0.5);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 3px solid #ffccd8;
+      width: 100%;
+      max-width: 480px;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      position: relative;
+      animation: modal-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: #ffe5ef;
+      border: none;
+      color: var(--pink-primary);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .polaroid-frame {
+      background: #ffffff;
+      padding: 16px 16px 28px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin: 16px auto;
+      max-width: 310px;
+      transform: rotate(-1.5deg);
+    }
+
+    .polaroid-photo {
+      width: 100%;
+      height: 310px;
+      border-radius: 6px;
+      background: #fff0f5;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .polaroid-caption {
+      font-family: 'Caveat', cursive;
+      font-size: 1.45rem;
+      color: var(--pink-primary);
+      margin-top: 14px;
+    }
+
+    .star-rating {
+      font-size: 1.8rem;
+      color: #ffb703;
+      margin: 10px 0;
+      letter-spacing: 4px;
+    }
+
+    /* Keyframe Animations */
+    @keyframes gentle-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    @keyframes modal-pop {
+      0% { opacity: 0; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 900px) {
+      .game-container {
+        grid-template-columns: 1fr;
+      }
+      .stage-card {
+        order: 1;
+      }
+      .character-viewport {
+        width: 100%;
+        max-width: 360px;
+        height: 440px;
+      }
+      .workstation-card {
+        order: 2;
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Particle / Sparkles Canvas -->
+  <canvas id="fx-canvas"></canvas>
+
+  <!-- Header -->
+  <header>
+    <div class="salon-logo">
+      <div class="salon-logo-icon">💇‍♀️</div>
+      <div>
+        <h1 class="salon-title">Salon Azza <span>by Faricha ✨</span></h1>
+      </div>
+    </div>
+
+    <div class="top-stats">
+      <div class="stat-badge" id="heartsBadge">
+        💖 <span id="heartsCount">150</span> Cinta
+      </div>
+      <div class="stat-badge" id="starsBadge">
+        ⭐ <span id="starsCount">Lv 1</span> Stylist
+      </div>
+    </div>
+
+    <div class="header-btns">
+      <button class="icon-btn" id="soundToggleBtn" title="Musik Santai">
+        <i class="fa-solid fa-music"></i>
+      </button>
+      <button class="icon-btn" id="missionBtn" title="Misi Pelanggan">
+        <i class="fa-solid fa-clipboard-check"></i>
+      </button>
+      <button class="icon-btn" id="helpBtn" title="Petunjuk Bermain">
+        <i class="fa-solid fa-question"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Game Stage -->
+  <div class="game-container">
+    
+    <!-- Left: Mirror & Character Viewport -->
+    <div class="stage-card">
+      <div class="stage-decor-top">🎀 AZZA BEAUTY MIRROR 🎀</div>
+
+      <div class="character-viewport" id="viewportBg">
+        <!-- SVG Doll Canvas / Layering -->
+        <svg class="character-svg" id="dollSvg" viewBox="0 0 400 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Room background elements inside SVG -->
+          <defs>
+            <radialGradient id="glowG" cx="50%" cy="40%" r="50%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="#ffe4ec" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle cx="200" cy="220" r="180" fill="url(#glowG)"/>
+
+          <!-- 1. LAYER: HAIR BACK -->
+          <g id="layerHairBack"></g>
+
+          <!-- 2. LAYER: BODY & SKIN -->
+          <g id="layerBody">
+            <!-- Neck & Shoulders -->
+            <path d="M185 240 L185 280 L150 310 L250 310 L215 240 Z" fill="#FFDFC9"/>
+            <!-- Body Base -->
+            <path d="M140 310 C140 310 130 420 130 500 L270 500 C270 420 260 310 260 310 Z" fill="#FFE2D1"/>
+            <!-- Head Base -->
+            <ellipse cx="200" cy="190" rx="68" ry="74" fill="#FFE2D1"/>
+            <!-- Ears -->
+            <ellipse cx="132" cy="195" rx="12" ry="16" fill="#FFD5C0"/>
+            <ellipse cx="268" cy="195" rx="12" ry="16" fill="#FFD5C0"/>
+            <!-- Ear Piercing / Earrings -->
+            <g id="layerEarrings"></g>
+          </g>
+
+          <!-- 3. LAYER: OUTFIT / CLOTHES -->
+          <g id="layerClothes"></g>
+
+          <!-- 4. LAYER: FACE & MAKEUP -->
+          <g id="layerMakeup">
+            <!-- Eyeshadow -->
+            <g id="layerEyeshadow"></g>
+
+            <!-- Eyes (Blinking Support) -->
+            <g id="layerEyes">
+              <!-- Sclera -->
+              <ellipse cx="172" cy="188" rx="14" ry="16" fill="#FFFFFF"/>
+              <ellipse cx="228" cy="188" rx="14" ry="16" fill="#FFFFFF"/>
+              <!-- Iris -->
+              <circle id="irisLeft" cx="173" cy="188" r="9" fill="#7C3AED"/>
+              <circle id="irisRight" cx="227" cy="188" r="9" fill="#7C3AED"/>
+              <!-- Eye Highlights -->
+              <circle cx="175" cy="185" r="3.5" fill="#FFFFFF"/>
+              <circle cx="229" cy="185" r="3.5" fill="#FFFFFF"/>
+              <circle cx="170" cy="191" r="1.5" fill="#FFFFFF"/>
+              <circle cx="224" cy="191" r="1.5" fill="#FFFFFF"/>
+              <!-- Eyelashes -->
+              <path d="M156 182 C162 174 182 174 188 182" stroke="#2D150B" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <path d="M212 182 C218 174 238 174 244 182" stroke="#2D150B" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <path d="M187 180 L191 176" stroke="#2D150B" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M243 180 L247 176" stroke="#2D150B" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+
+            <!-- Eyebrows -->
+            <path id="eyebrowLeft" d="M158 168 C166 163 180 164 186 169" stroke="#6A4638" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+            <path id="eyebrowRight" d="M214 169 C220 164 234 163 242 168" stroke="#6A4638" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+
+            <!-- Nose -->
+            <path d="M198 198 Q200 203 203 202" stroke="#E4A89B" stroke-width="2" stroke-linecap="round" fill="none"/>
+
+            <!-- Cheeks Blush -->
+            <g id="layerBlush">
+              <ellipse cx="156" cy="204" rx="14" ry="7" fill="#FF85A2" opacity="0.6"/>
+              <ellipse cx="244" cy="204" rx="14" ry="7" fill="#FF85A2" opacity="0.6"/>
+            </g>
+
+            <!-- Face Stamp / Decals -->
+            <g id="layerFaceDecal"></g>
+
+            <!-- Spa Mask (When Spa Active) -->
+            <g id="layerSpaMask"></g>
+
+            <!-- Lips -->
+            <g id="layerLips">
+              <path id="lipPath" d="M190 220 Q200 230 210 220 Q200 225 190 220 Z" fill="#FF6B9D"/>
+              <!-- Lip Gloss Sparkle -->
+              <circle cx="198" cy="222" r="1.5" fill="#FFFFFF" opacity="0.8"/>
+            </g>
+          </g>
+
+          <!-- 5. LAYER: HAIR FRONT / BANGS -->
+          <g id="layerHairFront"></g>
+
+          <!-- 6. LAYER: HAIR ACCESSORIES & HEADWEAR -->
+          <g id="layerAccessories"></g>
+
+          <!-- 7. LAYER: HANDHELD PROPS -->
+          <g id="layerHandheld"></g>
+        </svg>
+      </div>
+
+      <!-- Dialogue / Customer Comment -->
+      <div class="speech-bubble">
+        <i class="fa-solid fa-comment-heart"></i>
+        <div class="bubble-text" id="dialogueText">
+          "Hai Faricha! Mau dandan gaya apa kita hari ini di Salon Azza? 🌸"
+        </div>
+      </div>
+
+      <!-- Bottom Quick Actions -->
+      <div class="stage-actions">
+        <button class="btn-act btn-random" id="randomizeBtn">
+          <i class="fa-solid fa-dice"></i> Gaya Acak
+        </button>
+        <button class="btn-act btn-random" id="resetBtn">
+          <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
+        <button class="btn-act btn-finish" id="finishBtn">
+          <i class="fa-solid fa-camera"></i> Foto Hasil ✨
+        </button>
+      </div>
+    </div>
+
+    <!-- Right: Stylist Workstation & Options -->
+    <div class="workstation-card">
+      
+      <!-- Primary Category Tabs -->
+      <div class="station-nav">
+        <button class="tab-btn active" data-tab="hair">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>Rambut</span>
+        </button>
+        <button class="tab-btn" data-tab="makeup">
+          <i class="fa-solid fa-heart"></i>
+          <span>Makeup</span>
+        </button>
+        <button class="tab-btn" data-tab="fashion">
+          <i class="fa-solid fa-shirt"></i>
+          <span>Busana</span>
+        </button>
+        <button class="tab-btn" data-tab="accessories">
+          <i class="fa-solid fa-crown"></i>
+          <span>Aksesoris</span>
+        </button>
+        <button class="tab-btn" data-tab="studio">
+          <i class="fa-solid fa-image"></i>
+          <span>Studio</span>
+        </button>
+      </div>
+
+      <!-- Sub-navigation Pills -->
+      <div class="subnav-bar" id="subnavBar">
+        <!-- Injected dynamically via JS -->
+      </div>
+
+      <!-- Color Palette (Conditional for Hair, Lips, Lenses, etc.) -->
+      <div class="color-palette-box" id="colorPaletteContainer">
+        <span class="color-label" id="paletteLabel">Warna Pilihan:</span>
+        <div class="color-options" id="colorOptions">
+          <!-- Injected dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Items Grid -->
+      <div class="item-grid-viewport">
+        <div class="item-grid" id="itemGrid">
+          <!-- Injected dynamically via JS -->
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Modal Snapshot / Polaroid Result -->
+  <div class="modal-overlay" id="snapshotModal">
+    <div class="modal-card">
+      <button class="modal-close" id="closeSnapshotBtn">&times;</button>
+      
+      <h2 style="font-family:'Fredoka'; color:var(--pink-primary); font-size:1.6rem;">
+        🎉 Taraa! Hasil Salon Azza ✨
+      </h2>
+      <p style="color:var(--text-muted); font-size:0.9rem;">
+        Penampilan baru yang cantik dan super modis!
+      </p>
+
+      <div class="polaroid-frame">
+        <div class="polaroid-photo" id="polaroidContainer">
+          <!-- Cloned SVG Snapshot -->
+        </div>
+        <div class="polaroid-caption" id="snapshotCaption">
+          Styled with 💖 by Faricha
+        </div>
+      </div>
+
+      <div class="star-rating">⭐⭐⭐⭐⭐</div>
+      <p style="font-weight:700; color:#e11d48; margin-bottom:14px;" id="ratingText">
+        "Sempurna sekali! Pelanggan sangat bahagia dan puas! +50 Cinta 💖"
+      </p>
+
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <button class="btn-act btn-finish" id="savePhotoBtn">
+          <i class="fa-solid fa-download"></i> Simpan Gambar 📸
+        </button>
+        <button class="btn-act btn-random" id="continueStylingBtn">
+          <i class="fa-solid fa-rotate"></i> Dandan Lagi 💕
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Customer Mission / Challenge -->
+  <div class="modal-overlay" id="missionModal">
+    <div class="modal-card">
+      <button class="modal-close" id="closeMissionBtn">&times;</button>
+      
+      <div style="font-size:3rem; margin-bottom:6px;">💌</div>
+      <h2 style="font-family:'Fredoka'; color:var(--pink-primary); font-size:1.5rem;">
+        Misi Khusus Pelanggan!
+      </h2>
+      
+      <div style="background:#fff2f6; border:2px dashed #ff85b3; border-radius:18px; padding:18px; margin:16px 0; text-align:left;">
+        <div style="font-weight:800; color:#c2185b; margin-bottom:6px;" id="missionCustomer">
+          Pelanggan: Alya (Siswi Lucu) 🌸
+        </div>
+        <p style="color:#55273d; font-size:0.95rem; line-height:1.5;" id="missionDemand">
+          "Halo Salon Azza! Besok aku mau kencan di kafe stroberi bareng teman-teman. Bisakah kamu mendandaniku dengan: <b>Rambut Pink Bergelombang</b>, <b>Dress Manis Stroberi</b>, dan <b>Bando Pita</b>?"
+        </p>
+      </div>
+
+      <button class="btn-act btn-finish" id="acceptMissionBtn" style="width:100%;">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Terima Tantangan & Dandan! ✨
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Help / Tutorial -->
+  <div class="modal-overlay" id="helpModal">
+    <div class="modal-card" style="text-align:left;">
+      <button class="modal-close" id="closeHelpBtn">&times;</button>
+      
+      <h2 style="font-family:'Fredoka'; color:var(--pink-primary); text-align:center; margin-bottom:14px;">
+        🎀 Cara Bermain Salon Azza 🎀
+      </h2>
+      
+      <ul style="color:#55273d; font-size:0.92rem; line-height:1.7; padding-left:18px;">
+        <li><b>Pilih Kategori</b>: Klik tab Rambut, Makeup, Busana, atau Aksesoris di sisi kanan.</li>
+        <li><b>Ubah Warna</b>: Pilih palet warna untuk mengecat rambut, warna mata, atau lipstik.</li>
+        <li><b>Misi Pelanggan</b>: Tekan tombol centang <i class="fa-solid fa-clipboard-check" style="color:var(--pink-primary)"></i> di atas untuk melihat permintaan gaya pelanggan.</li>
+        <li><b>Gaya Acak</b>: Bingung mau dandan apa? Tekan <b>Gaya Acak 🎲</b> untuk inspirasi seketika!</li>
+        <li><b>Ambil Foto & Simpan</b>: Selesai berdandan, tekan <b>Foto Hasil ✨</b> untuk mengunduh polaroid cantik kreasi salonmu!</li>
+      </ul>
+      
+      <button class="btn-act btn-finish" id="gotItHelpBtn" style="margin-top:20px; width:100%;">
+        Aku Siap Merias! 💖
+      </button>
+    </div>
+  </div>
+
+  <!-- JavaScript Logic & Data -->
+  <script>
+    // --- 1. Sound Synthesizer (Web Audio API) ---
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let actx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!actx) actx = new AudioCtx();
+      if (actx.state === 'suspended') actx.resume();
+    }
+
+    function playTone(freq, type = 'sine', duration = 0.15, volume = 0.1) {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, actx.currentTime);
+        gain.gain.setValueAtTime(volume, actx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(actx.destination);
+        osc.start();
+        osc.stop(actx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playChime() {
+      playTone(523.25, 'triangle', 0.12, 0.08);
+      setTimeout(() => playTone(659.25, 'triangle', 0.14, 0.08), 70);
+      setTimeout(() => playTone(783.99, 'triangle', 0.18, 0.08), 140);
+    }
+
+    function playScissors() {
+      playTone(1800, 'square', 0.04, 0.05);
+      setTimeout(() => playTone(2200, 'square', 0.04, 0.05), 60);
+    }
+
+    function playShutter() {
+      playTone(300, 'triangle', 0.05, 0.15);
+      setTimeout(() => playTone(1200, 'sawtooth', 0.08, 0.12), 80);
+      setTimeout(() => playTone(1600, 'sine', 0.25, 0.15), 180);
+    }
+
+    // Toggle Sound
+    const soundBtn = document.getElementById('soundToggleBtn');
+    soundBtn.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundBtn.style.opacity = soundEnabled ? '1' : '0.5';
+      soundBtn.style.background = soundEnabled ? '#ffffff' : '#ffd5e2';
+      if (soundEnabled) playChime();
+    });
+
+    // --- 2. Floating Hearts FX Canvas ---
+    const fxCanvas = document.getElementById('fx-canvas');
+    const fctx = fxCanvas.getContext('2d');
+    function resizeFx() {
+      fxCanvas.width = window.innerWidth;
+      fxCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeFx);
+    resizeFx();
+
+    let sparkles = [];
+    function spawnSparkle(x, y, char = '💖') {
+      for (let i = 0; i < 4; i++) {
+        sparkles.push({
+          x: x + (Math.random() - 0.5) * 30,
+          y: y + (Math.random() - 0.5) * 30,
+          vx: (Math.random() - 0.5) * 3,
+          vy: -Math.random() * 3 - 1,
+          size: Math.random() * 8 + 14,
+          alpha: 1,
+          char: char
+        });
+      }
+    }
+
+    function updateSparkles() {
+      fctx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+      for (let i = sparkles.length - 1; i >= 0; i--) {
+        const s = sparkles[i];
+        s.x += s.vx;
+        s.y += s.vy;
+        s.alpha -= 0.025;
+        if (s.alpha <= 0) {
+          sparkles.splice(i, 1);
+          continue;
+        }
+        fctx.save();
+        fctx.globalAlpha = s.alpha;
+        fctx.font = `${s.size}px sans-serif`;
+        fctx.fillText(s.char, s.x, s.y);
+        fctx.restore();
+      }
+      requestAnimationFrame(updateSparkles);
+    }
+    updateSparkles();
+
+    // --- 3. Game State ---
+    const state = {
+      hearts: 150,
+      stars: 1,
+      currentTab: 'hair',
+      currentSubnav: 'style',
+      
+      // Styling Choices
+      hairStyle: 'twin_tails',
+      hairColor: '#FF6B9D',
+      
+      spaMask: false,
+      lensesColor: '#7C3AED',
+      eyeshadowColor: '#FF85A2',
+      blushType: 'soft_pink',
+      lipstickColor: '#FF4F8B',
+      faceDecal: 'none',
+
+      outfit: 'pink_maid',
+      accessory: 'ribbon_bow',
+      earrings: 'none',
+      handheld: 'boba',
+      backgroundTheme: 'salon_pink'
+    };
+
+    // Color Palettes
+    const palettes = {
+      hair: [
+        { name: 'Strawberry Pink', hex: '#FF6B9D' },
+        { name: 'Bubblegum Rose', hex: '#FF2A7A' },
+        { name: 'Lavender Lilac', hex: '#C084FC' },
+        { name: 'Sky Pastel Blue', hex: '#60A5FA' },
+        { name: 'Minty Teal', hex: '#34D399' },
+        { name: 'Honey Blonde', hex: '#FBBF24' },
+        { name: 'Choco Brown', hex: '#78350F' },
+        { name: 'Jet Raven', hex: '#262626' }
+      ],
+      lenses: [
+        { name: 'Amethyst Violet', hex: '#7C3AED' },
+        { name: 'Ruby Pink', hex: '#E11D48' },
+        { name: 'Emerald Green', hex: '#059669' },
+        { name: 'Ocean Cyan', hex: '#0284C7' },
+        { name: 'Amber Hazel', hex: '#D97706' },
+        { name: 'Natural Brown', hex: '#451A03' }
+      ],
+      lipstick: [
+        { name: 'Sweet Cherry', hex: '#FF4F8B' },
+        { name: 'Strawberry Gloss', hex: '#FF1493' },
+        { name: 'Peach Coral', hex: '#FB7185' },
+        { name: 'Nude Rosy', hex: '#F472B6' },
+        { name: 'Ruby Red', hex: '#DC2626' },
+        { name: 'Plum Berry', hex: '#9333EA' }
+      ],
+      eyeshadow: [
+        { name: 'Pink Glitter', hex: '#FF85A2' },
+        { name: 'Peach Sunset', hex: '#FDA4AF' },
+        { name: 'Lilac Dream', hex: '#D8B4FE' },
+        { name: 'Golden Glow', hex: '#FDE047' },
+        { name: 'Soft Mocha', hex: '#D6D3D1' }
+      ]
+    };
+
+    // Items Definitions
+    const salonData = {
+      hair: {
+        subnavs: [
+          { id: 'style', label: 'Gaya Rambut 💇‍♀️' },
+          { id: 'color', label: 'Warna Cat Rambut 🎨' }
+        ],
+        items: {
+          style: [
+            { id: 'twin_tails', name: 'Twin Tails Imut', icon: '👧' },
+            { id: 'wavy_long', name: 'Gelombang Anggun', icon: '👩‍🦱' },
+            { id: 'short_bob', name: 'Bob Korea Trendy', icon: '👱‍♀️' },
+            { id: 'princess_braid', name: 'Kepang Putri', icon: '🧝‍♀️' },
+            { id: 'high_ponytail', name: 'Kuncir Kuda Keren', icon: '💃' },
+            { id: 'hime_cut', name: 'Gaya Hime Cut', icon: '👸' }
+          ]
+        }
+      },
+      makeup: {
+        subnavs: [
+          { id: 'spa', label: 'Skincare / Masker 🧖‍♀️' },
+          { id: 'lenses', label: 'Lensa Mata 👁️' },
+          { id: 'lipstick', label: 'Pewarna Bibir 💄' },
+          { id: 'eyeshadow', label: 'Eyeshadow ✨' },
+          { id: 'blush', label: 'Pipi Merona 🌸' },
+          { id: 'decals', label: 'Stiker Wajah ⭐' }
+        ],
+        items: {
+          spa: [
+            { id: 'none', name: 'Wajah Bersih', icon: '✨' },
+            { id: 'strawberry_mask', name: 'Masker Stroberi', icon: '🍓' },
+            { id: 'cucumber_mask', name: 'Masker Mentimun', icon: '🥒' }
+          ],
+          blush: [
+            { id: 'none', name: 'Tanpa Blush', icon: '⚪' },
+            { id: 'soft_pink', name: 'Merona Lembut', icon: '🌸' },
+            { id: 'heart_blush', name: 'Blush Bentuk Hati', icon: '💕' },
+            { id: 'sun_kissed', name: 'Sunkissed Glow', icon: '🍑' }
+          ],
+          decals: [
+            { id: 'none', name: 'Polos', icon: '❌' },
+            { id: 'sparkle_stars', name: 'Bintang Berkilau', icon: '⭐' },
+            { id: 'sweet_hearts', name: 'Hati Imut', icon: '💖' },
+            { id: 'butterfly', name: 'Kupu-Kupu Indah', icon: '🦋' },
+            { id: 'freckles', name: 'Bintik Manis', icon: '✨' }
+          ]
+        }
+      },
+      fashion: {
+        subnavs: [
+          { id: 'dresses', label: 'Gaun & Baju 👗' }
+        ],
+        items: {
+          dresses: [
+            { id: 'pink_maid', name: 'Dress Stroberi Manis', icon: '🍓' },
+            { id: 'lolita_ribbon', name: 'Lolita Princess', icon: '🎀' },
+            { id: 'telkom_chic', name: 'Seragam Gaul Siswi', icon: '🏫' },
+            { id: 'fairy_gown', name: 'Gaun Peri Berkilau', icon: '🧚‍♀️' },
+            { id: 'idol_pop', name: 'Kostum Idol Panggung', icon: '🎤' },
+            { id: 'cozy_bear', name: 'Hoodie Beruang Hangat', icon: '🧸' }
+          ]
+        }
+      },
+      accessories: {
+        subnavs: [
+          { id: 'headwear', label: 'Hiasan Kepala 👑' },
+          { id: 'earrings', label: 'Anting-Anting 💎' },
+          { id: 'handheld', label: 'Barang Bawaan 🧋' }
+        ],
+        items: {
+          headwear: [
+            { id: 'none', name: 'Tanpa Bando', icon: '❌' },
+            { id: 'ribbon_bow', name: 'Pita Raksasa Pink', icon: '🎀' },
+            { id: 'cat_ears', name: 'Telinga Kucing Imut', icon: '🐱' },
+            { id: 'flower_crown', name: 'Mahkota Bunga Sakura', icon: '🌸' },
+            { id: 'princess_tiara', name: 'Mahkota Putri Berlian', icon: '👑' },
+            { id: 'bear_beret', name: 'Topi Beret Beruang', icon: '🐻' }
+          ],
+          earrings: [
+            { id: 'none', name: 'Tanpa Anting', icon: '❌' },
+            { id: 'pearl_drops', name: 'Mutiara Berkilau', icon: '⚪' },
+            { id: 'heart_studs', name: 'Hati Merah Muda', icon: '💖' },
+            { id: 'star_dangles', name: 'Bintang Emas', icon: '⭐' }
+          ],
+          handheld: [
+            { id: 'none', name: 'Tangan Kosong', icon: '✋' },
+            { id: 'boba', name: 'Boba Brown Sugar', icon: '🧋' },
+            { id: 'teddy_bear', name: 'Boneka Beruang Lucu', icon: '🧸' },
+            { id: 'rose_bouquet', name: 'Buket Mawar Pink', icon: '💐' },
+            { id: 'magic_wand', name: 'Tongkat Ajaib Bintang', icon: '🪄' },
+            { id: 'cute_purse', name: 'Tas Jinjing Stroberi', icon: '👛' }
+          ]
+        }
+      },
+      studio: {
+        subnavs: [
+          { id: 'backgrounds', label: 'Panggung & Ruangan 📸' }
+        ],
+        items: {
+          backgrounds: [
+            { id: 'salon_pink', name: 'Ruang Salon Azza', icon: '💖' },
+            { id: 'sakura_garden', name: 'Taman Sakura Jepang', icon: '🌸' },
+            { id: 'starry_night', name: 'Malam Penuh Bintang', icon: '✨' },
+            { id: 'cafe_pastel', name: 'Kafe Manis Stroberi', icon: '🍰' }
+          ]
+        }
+      }
+    };
+
+    // Dialogues for salon interactions
+    const cheerfulDialogues = [
+      "Wah, gaya ini cocok banget dan bikin kamu tambah manis! 🌸",
+      "Kelihatan super modis! Faricha bangga banget sama kreasimu ✨",
+      "Warna ini bikin wajah jadi makin cerah dan bersinar! 💖",
+      "Keren! Sekarang penampilanmu sudah seperti idol profesional 🎀",
+      "Sentuhan aksesorisnya pas banget, estetik maksimal! 🍓"
+    ];
+
+    function setDialogue(text) {
+      document.getElementById('dialogueText').innerText = text;
+    }
+
+    // --- 4. Render SVG Layers based on State ---
+    function renderDoll() {
+      // 1. Hair Back
+      const hairBackColor = state.hairColor;
+      let hairBackSvg = '';
+      if (state.hairStyle === 'twin_tails') {
+        hairBackSvg = `
+          <!-- Left Tail -->
+          <path d="M120 180 C80 180 50 250 60 380 C75 400 90 350 95 300 C100 250 115 220 130 200 Z" fill="${hairBackColor}"/>
+          <!-- Right Tail -->
+          <path d="M280 180 C320 180 350 250 340 380 C325 400 310 350 305 300 C300 250 285 220 270 200 Z" fill="${hairBackColor}"/>
+        `;
+      } else if (state.hairStyle === 'wavy_long') {
+        hairBackSvg = `
+          <path d="M110 180 C90 260 70 340 85 450 C120 480 140 430 135 360 C130 300 135 240 145 200 Z" fill="${hairBackColor}"/>
+          <path d="M290 180 C310 260 330 340 315 450 C280 480 260 430 265 360 C270 300 265 240 255 200 Z" fill="${hairBackColor}"/>
+          <path d="M125 160 C110 320 150 430 200 440 C250 430 290 320 275 160 Z" fill="${hairBackColor}"/>
+        `;
+      } else if (state.hairStyle === 'princess_braid') {
+        hairBackSvg = `
+          <!-- Left braid -->
+          <path d="M130 190 Q90 280 110 400 Q125 410 135 390 Q120 290 145 210 Z" fill="${hairBackColor}"/>
+          <!-- Right braid -->
+          <path d="M270 190 Q310 280 290 400 Q275 410 265 390 Q280 290 255 210 Z" fill="${hairBackColor}"/>
+        `;
+      } else if (state.hairStyle === 'high_ponytail') {
+        hairBackSvg = `
+          <path d="M210 120 C280 100 330 160 320 320 C300 330 285 280 280 230 C270 180 250 150 220 140 Z" fill="${hairBackColor}"/>
+        `;
+      } else if (state.hairStyle === 'hime_cut') {
+        hairBackSvg = `
+          <path d="M120 170 L110 420 L150 420 L145 220 Z" fill="${hairBackColor}"/>
+          <path d="M280 170 L290 420 L250 420 L255 220 Z" fill="${hairBackColor}"/>
+          <rect x="130" y="160" width="140" height="260" fill="${hairBackColor}"/>
+        `;
+      }
+      document.getElementById('layerHairBack').innerHTML = hairBackSvg;
+
+      // 2. Eyes Lenses & Shadows
+      document.getElementById('irisLeft').setAttribute('fill', state.lensesColor);
+      document.getElementById('irisRight').setAttribute('fill', state.lensesColor);
+
+      document.getElementById('layerEyeshadow').innerHTML = `
+        <ellipse cx="172" cy="180" rx="16" ry="7" fill="${state.eyeshadowColor}" opacity="0.6"/>
+        <ellipse cx="228" cy="180" rx="16" ry="7" fill="${state.eyeshadowColor}" opacity="0.6"/>
+      `;
+
+      // 3. Cheeks Blush
+      let blushSvg = '';
+      if (state.blushType === 'soft_pink') {
+        blushSvg = `
+          <ellipse cx="156" cy="204" rx="14" ry="7" fill="#FF85A2" opacity="0.65"/>
+          <ellipse cx="244" cy="204" rx="14" ry="7" fill="#FF85A2" opacity="0.65"/>
+        `;
+      } else if (state.blushType === 'heart_blush') {
+        blushSvg = `
+          <path d="M156 201 C153 197 148 197 146 200 C144 204 148 208 156 213 C164 208 168 204 166 200 C164 197 159 197 156 201 Z" fill="#FF4F8B" opacity="0.8"/>
+          <path d="M244 201 C241 197 236 197 234 200 C232 204 236 208 244 213 C252 208 256 204 254 200 C252 197 247 197 244 201 Z" fill="#FF4F8B" opacity="0.8"/>
+        `;
+      } else if (state.blushType === 'sun_kissed') {
+        blushSvg = `
+          <ellipse cx="200" cy="202" rx="55" ry="9" fill="#FB923C" opacity="0.3"/>
+          <ellipse cx="156" cy="202" rx="14" ry="7" fill="#F43F5E" opacity="0.5"/>
+          <ellipse cx="244" cy="202" rx="14" ry="7" fill="#F43F5E" opacity="0.5"/>
+        `;
+      }
+      document.getElementById('layerBlush').innerHTML = blushSvg;
+
+      // 4. Face Decals
+      let decalSvg = '';
+      if (state.faceDecal === 'sparkle_stars') {
+        decalSvg = `
+          <polygon points="152,192 154,196 158,197 155,200 156,204 152,201 148,204 149,200 146,197 150,196" fill="#FBBF24"/>
+          <polygon points="248,192 250,196 254,197 251,200 252,204 248,201 244,204 245,200 242,197 246,196" fill="#FBBF24"/>
+        `;
+      } else if (state.faceDecal === 'sweet_hearts') {
+        decalSvg = `
+          <circle cx="153" cy="198" r="3" fill="#EC4899"/>
+          <circle cx="247" cy="198" r="3" fill="#EC4899"/>
+        `;
+      } else if (state.faceDecal === 'butterfly') {
+        decalSvg = `
+          <path d="M148 196 C143 191 143 203 148 200 C153 203 153 191 148 196 Z" fill="#A855F7"/>
+        `;
+      } else if (state.faceDecal === 'freckles') {
+        decalSvg = `
+          <circle cx="158" cy="202" r="1.5" fill="#B45309" opacity="0.7"/>
+          <circle cx="163" cy="204" r="1.2" fill="#B45309" opacity="0.7"/>
+          <circle cx="154" cy="206" r="1.4" fill="#B45309" opacity="0.7"/>
+          <circle cx="237" cy="204" r="1.2" fill="#B45309" opacity="0.7"/>
+          <circle cx="242" cy="202" r="1.5" fill="#B45309" opacity="0.7"/>
+          <circle cx="246" cy="206" r="1.4" fill="#B45309" opacity="0.7"/>
+        `;
+      }
+      document.getElementById('layerFaceDecal').innerHTML = decalSvg;
+
+      // 5. Spa Mask
+      let spaSvg = '';
+      if (state.spaMask === 'strawberry_mask') {
+        spaSvg = `
+          <path d="M140 180 C140 130 260 130 260 180 C260 230 240 255 200 255 C160 255 140 230 140 180 Z" fill="#FB7185" opacity="0.85"/>
+          <!-- Mask Cutouts for eyes and lips -->
+          <ellipse cx="172" cy="188" rx="18" ry="18" fill="#FFE2D1"/>
+          <ellipse cx="228" cy="188" rx="18" ry="18" fill="#FFE2D1"/>
+          <ellipse cx="200" cy="222" rx="16" ry="10" fill="#FFE2D1"/>
+          <!-- Strawberry seeds decor on mask -->
+          <ellipse cx="190" cy="155" rx="2" ry="3" fill="#FFF" opacity="0.7"/>
+          <ellipse cx="210" cy="155" rx="2" ry="3" fill="#FFF" opacity="0.7"/>
+          <ellipse cx="200" cy="165" rx="2" ry="3" fill="#FFF" opacity="0.7"/>
+        `;
+      } else if (state.spaMask === 'cucumber_mask') {
+        spaSvg = `
+          <circle cx="172" cy="188" r="22" fill="#86EFAC" stroke="#16A34A" stroke-width="3"/>
+          <circle cx="172" cy="188" r="10" fill="#BBF7D0"/>
+          <circle cx="228" cy="188" r="22" fill="#86EFAC" stroke="#16A34A" stroke-width="3"/>
+          <circle cx="228" cy="188" r="10" fill="#BBF7D0"/>
+        `;
+      }
+      document.getElementById('layerSpaMask').innerHTML = spaSvg;
+
+      // 6. Lips Color
+      document.getElementById('lipPath').setAttribute('fill', state.lipstickColor);
+
+      // 7. Outfit / Clothes
+      let clothesSvg = '';
+      if (state.outfit === 'pink_maid') {
+        clothesSvg = `
+          <!-- Pink Strawberry Maid Dress -->
+          <path d="M150 300 L125 480 L275 480 L250 300 Z" fill="#FF6B9D"/>
+          <!-- White Apron -->
+          <path d="M165 310 L155 460 L245 460 L235 310 Z" fill="#FFFFFF"/>
+          <path d="M160 305 Q200 320 240 305" stroke="#FF4F8B" stroke-width="4" fill="none"/>
+          <!-- Ruffles -->
+          <circle cx="150" cy="305" r="8" fill="#FFFFFF"/>
+          <circle cx="250" cy="305" r="8" fill="#FFFFFF"/>
+          <polygon points="200,318 190,340 210,340" fill="#FF1493"/>
+        `;
+      } else if (state.outfit === 'lolita_ribbon') {
+        clothesSvg = `
+          <path d="M140 300 L110 480 L290 480 L260 300 Z" fill="#F472B6"/>
+          <path d="M155 310 Q200 340 245 310 L255 470 Q200 490 145 470 Z" fill="#FDF2F8"/>
+          <!-- Ribbons on skirt -->
+          <circle cx="200" cy="370" r="6" fill="#DB2777"/>
+          <circle cx="200" cy="410" r="6" fill="#DB2777"/>
+          <circle cx="200" cy="450" r="6" fill="#DB2777"/>
+        `;
+      } else if (state.outfit === 'telkom_chic') {
+        clothesSvg = `
+          <!-- Telkom Vocational School Chic Uniform -->
+          <path d="M145 300 L135 480 L265 480 L255 300 Z" fill="#E11D48"/>
+          <path d="M160 300 L170 380 L230 380 L240 300 Z" fill="#FFFFFF"/>
+          <!-- Red School Tie -->
+          <polygon points="200,310 194,365 206,365" fill="#991B1B"/>
+          <!-- White Cardigan Collar -->
+          <path d="M145 300 L175 350 L200 310 L225 350 L255 300 Z" fill="#F1F5F9" opacity="0.5"/>
+        `;
+      } else if (state.outfit === 'fairy_gown') {
+        clothesSvg = `
+          <path d="M145 300 L105 480 L295 480 L255 300 Z" fill="url(#glowG)"/>
+          <path d="M145 300 L105 480 L295 480 L255 300 Z" fill="#C084FC" opacity="0.75"/>
+          <polygon points="200,305 180,335 220,335" fill="#FDE047"/>
+        `;
+      } else if (state.outfit === 'idol_pop') {
+        clothesSvg = `
+          <path d="M148 300 L120 480 L280 480 L252 300 Z" fill="#3B82F6"/>
+          <path d="M160 300 L150 420 L250 420 L240 300 Z" fill="#F43F5E"/>
+          <path d="M170 320 L200 350 L230 320 Z" fill="#FDE047"/>
+        `;
+      } else if (state.outfit === 'cozy_bear') {
+        clothesSvg = `
+          <!-- Fluffy Warm Bear Hoodie -->
+          <path d="M135 290 L120 480 L280 480 L265 290 Z" fill="#D97706"/>
+          <!-- Bear belly -->
+          <ellipse cx="200" cy="400" rx="45" ry="55" fill="#FEF3C7"/>
+          <circle cx="190" cy="340" r="4" fill="#78350F"/>
+          <circle cx="210" cy="340" r="4" fill="#78350F"/>
+        `;
+      }
+      document.getElementById('layerClothes').innerHTML = clothesSvg;
+
+      // 8. Hair Front / Bangs
+      let hairFrontSvg = '';
+      if (state.hairStyle === 'twin_tails' || state.hairStyle === 'wavy_long') {
+        hairFrontSvg = `
+          <!-- Cute rounded bangs -->
+          <path d="M140 170 C145 130 175 125 200 125 C225 125 255 130 260 170 C240 160 220 162 200 166 C180 162 160 160 140 170 Z" fill="${hairBackColor}"/>
+          <!-- Side fringe bangs -->
+          <path d="M134 165 C132 210 142 245 146 250 C148 245 146 210 148 175 Z" fill="${hairBackColor}"/>
+          <path d="M266 165 C268 210 258 245 254 250 C252 245 254 210 252 175 Z" fill="${hairBackColor}"/>
+        `;
+      } else if (state.hairStyle === 'short_bob') {
+        hairFrontSvg = `
+          <path d="M136 165 C138 120 262 120 264 165 C268 220 265 260 255 270 C245 250 248 190 248 170 C220 160 180 160 152 170 C152 190 155 250 145 270 C135 260 132 220 136 165 Z" fill="${hairBackColor}"/>
+        `;
+      } else if (state.hairStyle === 'princess_braid') {
+        hairFrontSvg = `
+          <path d="M142 165 C146 128 254 128 258 165 C230 155 170 155 142 165 Z" fill="${hairBackColor}"/>
+          <!-- Forehead loose strands -->
+          <path d="M185 155 Q190 178 186 182" stroke="${hairBackColor}" stroke-width="4" stroke-linecap="round"/>
+          <path d="M215 155 Q210 178 214 182" stroke="${hairBackColor}" stroke-width="4" stroke-linecap="round"/>
+        `;
+      } else if (state.hairStyle === 'high_ponytail') {
+        hairFrontSvg = `
+          <path d="M138 165 C142 120 258 120 262 165 C240 150 160 150 138 165 Z" fill="${hairBackColor}"/>
+          <!-- Swept bangs -->
+          <path d="M150 145 Q200 170 245 160" stroke="${hairBackColor}" stroke-width="12" stroke-linecap="round"/>
+        `;
+      } else if (state.hairStyle === 'hime_cut') {
+        hairFrontSvg = `
+          <!-- Flat straight hime bangs -->
+          <path d="M138 165 C140 125 260 125 262 165 L262 175 C240 175 160 175 138 175 Z" fill="${hairBackColor}"/>
+          <!-- Side cut blocks -->
+          <rect x="135" y="165" width="16" height="80" rx="4" fill="${hairBackColor}"/>
+          <rect x="249" y="165" width="16" height="80" rx="4" fill="${hairBackColor}"/>
+        `;
+      }
+      document.getElementById('layerHairFront').innerHTML = hairFrontSvg;
+
+      // 9. Accessories & Headwear
+      let accSvg = '';
+      if (state.accessory === 'ribbon_bow') {
+        accSvg = `
+          <!-- Huge Pink Bow Ribbon -->
+          <g transform="translate(200, 125)">
+            <path d="M0 -5 C-35 -35 -45 10 -6 5 Z" fill="#FF2A7A"/>
+            <path d="M0 -5 C35 -35 45 10 6 5 Z" fill="#FF2A7A"/>
+            <circle cx="0" cy="0" r="8" fill="#FFE4EC"/>
+          </g>
+        `;
+      } else if (state.accessory === 'cat_ears') {
+        accSvg = `
+          <!-- Cat Ear Headband -->
+          <path d="M140 140 L130 90 L170 120 Z" fill="#FF85B3"/>
+          <path d="M142 135 L138 100 L162 122 Z" fill="#FFE5EF"/>
+          <path d="M260 140 L270 90 L230 120 Z" fill="#FF85B3"/>
+          <path d="M258 135 L262 100 L238 122 Z" fill="#FFE5EF"/>
+          <path d="M145 130 Q200 110 255 130" stroke="#4A2135" stroke-width="4" fill="none"/>
+        `;
+      } else if (state.accessory === 'flower_crown') {
+        accSvg = `
+          <g transform="translate(200, 130)">
+            <circle cx="-40" cy="0" r="10" fill="#FFB7D5"/>
+            <circle cx="-15" cy="-6" r="12" fill="#FF85B3"/>
+            <circle cx="15" cy="-6" r="12" fill="#FF85B3"/>
+            <circle cx="40" cy="0" r="10" fill="#FFB7D5"/>
+            <circle cx="0" cy="-8" r="13" fill="#FFE4EC"/>
+            <circle cx="0" cy="-8" r="5" fill="#FBBF24"/>
+          </g>
+        `;
+      } else if (state.accessory === 'princess_tiara') {
+        accSvg = `
+          <g transform="translate(200, 120)">
+            <polygon points="-30,5 -20,-15 -10,0 0,-25 10,0 20,-15 30,5" fill="#FBBF24" stroke="#D97706" stroke-width="1.5"/>
+            <circle cx="0" cy="-25" r="4" fill="#E11D48"/>
+            <circle cx="-20" cy="-15" r="3" fill="#3B82F6"/>
+            <circle cx="20" cy="-15" r="3" fill="#3B82F6"/>
+          </g>
+        `;
+      } else if (state.accessory === 'bear_beret') {
+        accSvg = `
+          <g transform="translate(200, 115)">
+            <ellipse cx="0" cy="0" rx="60" ry="24" fill="#B45309"/>
+            <circle cx="-35" cy="-20" r="12" fill="#92400E"/>
+            <circle cx="35" cy="-20" r="12" fill="#92400E"/>
+            <circle cx="-35" cy="-20" r="6" fill="#FDE68A"/>
+            <circle cx="35" cy="-20" r="6" fill="#FDE68A"/>
+          </g>
+        `;
+      }
+      document.getElementById('layerAccessories').innerHTML = accSvg;
+
+      // 10. Earrings
+      let earSvg = '';
+      if (state.earrings === 'pearl_drops') {
+        earSvg = `
+          <circle cx="132" cy="214" r="5" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+          <circle cx="268" cy="214" r="5" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+        `;
+      } else if (state.earrings === 'heart_studs') {
+        earSvg = `
+          <circle cx="132" cy="213" r="5" fill="#FF1493"/>
+          <circle cx="268" cy="213" r="5" fill="#FF1493"/>
+        `;
+      } else if (state.earrings === 'star_dangles') {
+        earSvg = `
+          <polygon points="132,210 134,215 139,215 135,218 136,223 132,220 128,223 129,218 125,215 130,215" fill="#FBBF24"/>
+          <polygon points="268,210 270,215 275,215 271,218 272,223 268,220 264,223 265,218 261,215 266,215" fill="#FBBF24"/>
+        `;
+      }
+      document.getElementById('layerEarrings').innerHTML = earSvg;
+
+      // 11. Handheld Item
+      let handSvg = '';
+      if (state.handheld === 'boba') {
+        handSvg = `
+          <g transform="translate(285, 340)">
+            <!-- Boba Cup -->
+            <path d="M0 20 L5 80 L35 80 L40 20 Z" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="2"/>
+            <rect x="5" y="30" width="30" height="46" rx="2" fill="#D97706" opacity="0.6"/>
+            <!-- Straw -->
+            <line x1="20" y1="5" x2="20" y2="70" stroke="#EC4899" stroke-width="4" stroke-linecap="round"/>
+            <!-- Pearls -->
+            <circle cx="12" cy="68" r="3" fill="#1C1917"/>
+            <circle cx="20" cy="72" r="3" fill="#1C1917"/>
+            <circle cx="28" cy="68" r="3" fill="#1C1917"/>
+            <circle cx="16" cy="60" r="3" fill="#1C1917"/>
+            <circle cx="24" cy="61" r="3" fill="#1C1917"/>
+          </g>
+        `;
+      } else if (state.handheld === 'teddy_bear') {
+        handSvg = `
+          <g transform="translate(270, 340)">
+            <ellipse cx="25" cy="40" rx="22" ry="26" fill="#D97706"/>
+            <circle cx="25" cy="18" r="16" fill="#D97706"/>
+            <circle cx="14" cy="8" r="6" fill="#B45309"/>
+            <circle cx="36" cy="8" r="6" fill="#B45309"/>
+            <ellipse cx="25" cy="22" rx="7" ry="5" fill="#FEF3C7"/>
+            <circle cx="25" cy="20" r="2.5" fill="#451A03"/>
+          </g>
+        `;
+      } else if (state.handheld === 'rose_bouquet') {
+        handSvg = `
+          <g transform="translate(265, 335)">
+            <polygon points="25,50 5,85 45,85" fill="#FEF08A"/>
+            <circle cx="15" cy="40" r="10" fill="#E11D48"/>
+            <circle cx="35" cy="40" r="10" fill="#E11D48"/>
+            <circle cx="25" cy="28" r="11" fill="#F43F5E"/>
+            <circle cx="25" cy="28" r="4" fill="#FFE4E6"/>
+          </g>
+        `;
+      } else if (state.handheld === 'magic_wand') {
+        handSvg = `
+          <g transform="translate(275, 320)">
+            <line x1="20" y1="20" x2="45" y2="85" stroke="#FBBF24" stroke-width="5" stroke-linecap="round"/>
+            <polygon points="20,5 24,15 35,16 27,23 29,34 20,28 11,34 13,23 5,16 16,15" fill="#FDE047" stroke="#F59E0B" stroke-width="2"/>
+          </g>
+        `;
+      } else if (state.handheld === 'cute_purse') {
+        handSvg = `
+          <g transform="translate(275, 350)">
+            <path d="M5 25 Q20 5 35 25" stroke="#F43F5E" stroke-width="3" fill="none"/>
+            <rect x="0" y="25" width="40" height="35" rx="8" fill="#FF85A2"/>
+            <polygon points="20,38 12,50 28,50" fill="#FFFFFF"/>
+          </g>
+        `;
+      }
+      document.getElementById('layerHandheld').innerHTML = handSvg;
+
+      // 12. Background Theme
+      const vp = document.getElementById('viewportBg');
+      if (state.backgroundTheme === 'salon_pink') {
+        vp.style.background = 'radial-gradient(circle, #fff5f9 0%, #ffebf3 70%, #ffdbe9 100%)';
+      } else if (state.backgroundTheme === 'sakura_garden') {
+        vp.style.background = 'linear-gradient(180deg, #dbeafe 0%, #ffe4e6 60%, #bbf7d0 100%)';
+      } else if (state.backgroundTheme === 'starry_night') {
+        vp.style.background = 'radial-gradient(circle, #312e81 0%, #1e1b4b 70%, #0f172a 100%)';
+      } else if (state.backgroundTheme === 'cafe_pastel') {
+        vp.style.background = 'linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fbcfe8 100%)';
+      }
+    }
+
+    // --- 5. Render Navigation & Items in Workstation ---
+    function renderWorkstation() {
+      const catData = salonData[state.currentTab];
+      const subnavBar = document.getElementById('subnavBar');
+      subnavBar.innerHTML = '';
+
+      // Populate Subnav
+      catData.subnavs.forEach((sub, idx) => {
+        const pill = document.createElement('button');
+        pill.className = `subnav-pill ${state.currentSubnav === sub.id ? 'active' : ''}`;
+        pill.innerText = sub.label;
+        pill.addEventListener('click', () => {
+          playTone(600, 'sine', 0.08);
+          state.currentSubnav = sub.id;
+          renderWorkstation();
+        });
+        subnavBar.appendChild(pill);
+      });
+
+      // Palette Container Handler
+      const paletteBox = document.getElementById('colorPaletteContainer');
+      const paletteOpts = document.getElementById('colorOptions');
+      const paletteLabel = document.getElementById('paletteLabel');
+      paletteOpts.innerHTML = '';
+
+      let showPalette = false;
+      let activePaletteList = [];
+      let currentActiveHex = '';
+      let onColorSelect = null;
+
+      if (state.currentTab === 'hair' && state.currentSubnav === 'color') {
+        showPalette = true;
+        paletteLabel.innerText = 'Warna Cat Rambut:';
+        activePaletteList = palettes.hair;
+        currentActiveHex = state.hairColor;
+        onColorSelect = (hex) => {
+          state.hairColor = hex;
+          playScissors();
+          spawnSparkle(200, 200, '✂️');
+          setDialogue("Wah, cat rambut warna ini manis banget di rambutmu! 💖");
+        };
+      } else if (state.currentTab === 'makeup' && state.currentSubnav === 'lenses') {
+        showPalette = true;
+        paletteLabel.innerText = 'Warna Softlens:';
+        activePaletteList = palettes.lenses;
+        currentActiveHex = state.lensesColor;
+        onColorSelect = (hex) => {
+          state.lensesColor = hex;
+          playTone(850, 'triangle', 0.1);
+          setDialogue("Mata jadi berkilau jernih seperti permata! ✨");
+        };
+      } else if (state.currentTab === 'makeup' && state.currentSubnav === 'lipstick') {
+        showPalette = true;
+        paletteLabel.innerText = 'Warna Lipstik:';
+        activePaletteList = palettes.lipstick;
+        currentActiveHex = state.lipstickColor;
+        onColorSelect = (hex) => {
+          state.lipstickColor = hex;
+          playTone(720, 'sine', 0.1);
+          setDialogue("Bibir merona segar dan lembut! 💋");
+        };
+      } else if (state.currentTab === 'makeup' && state.currentSubnav === 'eyeshadow') {
+        showPalette = true;
+        paletteLabel.innerText = 'Warna Eyeshadow:';
+        activePaletteList = palettes.eyeshadow;
+        currentActiveHex = state.eyeshadowColor;
+        onColorSelect = (hex) => {
+          state.eyeshadowColor = hex;
+          playTone(780, 'sine', 0.1);
+          setDialogue("Riasan mata estetik yang mempesona! 🌸");
+        };
+      }
+
+      if (showPalette) {
+        paletteBox.style.display = 'flex';
+        activePaletteList.forEach((c) => {
+          const swatch = document.createElement('div');
+          swatch.className = `color-swatch ${c.hex.toLowerCase() === currentActiveHex.toLowerCase() ? 'active' : ''}`;
+          swatch.style.background = c.hex;
+          swatch.title = c.name;
+          swatch.addEventListener('click', () => {
+            onColorSelect(c.hex);
+            renderDoll();
+            renderWorkstation();
+          });
+          paletteOpts.appendChild(swatch);
+        });
+      } else {
+        paletteBox.style.display = 'none';
+      }
+
+      // Populate Items Grid
+      const grid = document.getElementById('itemGrid');
+      grid.innerHTML = '';
+
+      const items = (catData.items && catData.items[state.currentSubnav]) || [];
+      if (items.length === 0 && showPalette) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align:center; padding:30px; color:var(--text-muted);">
+            <div style="font-size:2.5rem; margin-bottom:8px;">🎨</div>
+            <b>Pilih salah satu warna di palet atas</b> untuk mewarnai tampilan karaktermu!
+          </div>
+        `;
+        return;
+      }
+
+      items.forEach((item) => {
+        const card = document.createElement('div');
+        let isActive = false;
+
+        if (state.currentTab === 'hair' && state.currentSubnav === 'style') isActive = state.hairStyle === item.id;
+        else if (state.currentSubnav === 'spa') isActive = (state.spaMask === item.id) || (!state.spaMask && item.id === 'none');
+        else if (state.currentSubnav === 'blush') isActive = state.blushType === item.id;
+        else if (state.currentSubnav === 'decals') isActive = state.faceDecal === item.id;
+        else if (state.currentSubnav === 'dresses') isActive = state.outfit === item.id;
+        else if (state.currentSubnav === 'headwear') isActive = state.accessory === item.id;
+        else if (state.currentSubnav === 'earrings') isActive = state.earrings === item.id;
+        else if (state.currentSubnav === 'handheld') isActive = state.handheld === item.id;
+        else if (state.currentSubnav === 'backgrounds') isActive = state.backgroundTheme === item.id;
+
+        card.className = `item-card ${isActive ? 'active' : ''}`;
+        card.innerHTML = `
+          <div class="item-check"><i class="fa-solid fa-check"></i></div>
+          <div class="item-icon">${item.icon}</div>
+          <div class="item-name">${item.name}</div>
+        `;
+
+        card.addEventListener('click', (e) => {
+          playChime();
+          const rect = card.getBoundingClientRect();
+          spawnSparkle(rect.left + rect.width / 2, rect.top + rect.height / 2, '✨');
+
+          // Apply state change
+          if (state.currentTab === 'hair' && state.currentSubnav === 'style') {
+            state.hairStyle = item.id;
+            playScissors();
+          } else if (state.currentSubnav === 'spa') {
+            state.spaMask = item.id === 'none' ? false : item.id;
+          } else if (state.currentSubnav === 'blush') {
+            state.blushType = item.id;
+          } else if (state.currentSubnav === 'decals') {
+            state.faceDecal = item.id;
+          } else if (state.currentSubnav === 'dresses') {
+            state.outfit = item.id;
+          } else if (state.currentSubnav === 'headwear') {
+            state.accessory = item.id;
+          } else if (state.currentSubnav === 'earrings') {
+            state.earrings = item.id;
+          } else if (state.currentSubnav === 'handheld') {
+            state.handheld = item.id;
+          } else if (state.currentSubnav === 'backgrounds') {
+            state.backgroundTheme = item.id;
+          }
+
+          // Random cheer dialogue
+          const randomDialogue = cheerfulDialogues[Math.floor(Math.random() * cheerfulDialogues.length)];
+          setDialogue(randomDialogue);
+
+          renderDoll();
+          renderWorkstation();
+        });
+
+        grid.appendChild(card);
+      });
+    }
+
+    // --- 6. Tab Navigation Click Handler ---
+    document.querySelectorAll('.tab-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        playTone(550, 'sine', 0.1);
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        state.currentTab = btn.getAttribute('data-tab');
+        state.currentSubnav = salonData[state.currentTab].subnavs[0].id;
+        renderWorkstation();
+      });
+    });
+
+    // --- 7. Randomize & Reset Buttons ---
+    document.getElementById('randomizeBtn').addEventListener('click', () => {
+      playChime();
+      spawnSparkle(window.innerWidth / 2, window.innerHeight / 2, '🎲');
+
+      const hairStyles = ['twin_tails', 'wavy_long', 'short_bob', 'princess_braid', 'high_ponytail', 'hime_cut'];
+      const hairCols = palettes.hair.map(c => c.hex);
+      const dresses = ['pink_maid', 'lolita_ribbon', 'telkom_chic', 'fairy_gown', 'idol_pop', 'cozy_bear'];
+      const accs = ['ribbon_bow', 'cat_ears', 'flower_crown', 'princess_tiara', 'bear_beret'];
+      const props = ['boba', 'teddy_bear', 'rose_bouquet', 'magic_wand', 'cute_purse'];
+      const bgs = ['salon_pink', 'sakura_garden', 'starry_night', 'cafe_pastel'];
+
+      state.hairStyle = hairStyles[Math.floor(Math.random() * hairStyles.length)];
+      state.hairColor = hairCols[Math.floor(Math.random() * hairCols.length)];
+      state.outfit = dresses[Math.floor(Math.random() * dresses.length)];
+      state.accessory = accs[Math.floor(Math.random() * accs.length)];
+      state.handheld = props[Math.floor(Math.random() * props.length)];
+      state.backgroundTheme = bgs[Math.floor(Math.random() * bgs.length)];
+      state.lipstickColor = palettes.lipstick[Math.floor(Math.random() * palettes.lipstick.length)].hex;
+
+      setDialogue("Taraa! Inilah perpaduan gaya acak yang super imut & tak terduga! 🎀");
+      renderDoll();
+      renderWorkstation();
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      playTone(400, 'triangle', 0.15);
+      state.hairStyle = 'twin_tails';
+      state.hairColor = '#FF6B9D';
+      state.outfit = 'pink_maid';
+      state.accessory = 'ribbon_bow';
+      state.handheld = 'boba';
+      state.spaMask = false;
+      state.faceDecal = 'none';
+      state.backgroundTheme = 'salon_pink';
+
+      setDialogue("Karakter telah di-reset ke gaya awal. Siap dirias kembali! 🌸");
+      renderDoll();
+      renderWorkstation();
+    });
+
+    // --- 8. Snapshot & Photo Booth ---
+    const snapshotModal = document.getElementById('snapshotModal');
+    const finishBtn = document.getElementById('finishBtn');
+    const closeSnapshotBtn = document.getElementById('closeSnapshotBtn');
+    const continueStylingBtn = document.getElementById('continueStylingBtn');
+    const savePhotoBtn = document.getElementById('savePhotoBtn');
+
+    finishBtn.addEventListener('click', () => {
+      playShutter();
+      spawnSparkle(window.innerWidth / 2, window.innerHeight / 2, '📸');
+
+      // Add hearts reward
+      state.hearts += 50;
+      document.getElementById('heartsCount').innerText = state.hearts;
+
+      // Clone SVG into Polaroid Container
+      const dollSvg = document.getElementById('dollSvg');
+      const polaroid = document.getElementById('polaroidContainer');
+      polaroid.innerHTML = dollSvg.outerHTML;
+
+      snapshotModal.style.display = 'flex';
+    });
+
+    closeSnapshotBtn.addEventListener('click', () => {
+      snapshotModal.style.display = 'none';
+    });
+    continueStylingBtn.addEventListener('click', () => {
+      snapshotModal.style.display = 'none';
+    });
+
+    // Download Snapshot as Image via Canvas
+    savePhotoBtn.addEventListener('click', () => {
+      playChime();
+      const svg = document.getElementById('dollSvg');
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const canvas = document.createElement('canvas');
+      canvas.width = 500;
+      canvas.height = 620;
+      const ctx = canvas.getContext('2d');
+
+      // Draw cute polaroid frame
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, 500, 620);
+      ctx.strokeStyle = '#ffd1dc';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(0, 0, 500, 620);
+
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, 20, 20, 460, 480);
+        // Caption
+        ctx.fillStyle = '#ff2d75';
+        ctx.font = 'bold 28px "Caveat", cursive, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Styled at Salon Azza by Faricha 💖', 250, 550);
+        ctx.fillStyle = '#8c5770';
+        ctx.font = '600 16px "Quicksand", sans-serif';
+        ctx.fillText('Malang • SMK Telkom • Cute Makeover', 250, 585);
+
+        const a = document.createElement('a');
+        a.download = 'Salon_Azza_Look.png';
+        a.href = canvas.toDataURL('image/png');
+        a.click();
+      };
+      img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+    });
+
+    // --- 9. Customer Mission Modal ---
+    const missionModal = document.getElementById('missionModal');
+    const missionBtn = document.getElementById('missionBtn');
+    const closeMissionBtn = document.getElementById('closeMissionBtn');
+    const acceptMissionBtn = document.getElementById('acceptMissionBtn');
+
+    const customerMissions = [
+      { customer: 'Alya (Siswi Ngantang) 🌸', demand: 'Aku mau pergi piknik sore! Tolong dandani dengan <b>Rambut Gelombang</b>, <b>Dress Stroberi</b>, dan bawa <b>Boba</b> ya!' },
+      { customer: 'Karin (Moklet IT Squad) 💻', demand: 'Hari ini ada pameran proyek di SMK Telkom! Aku butuh gaya <b>Seragam Gaul Siswi</b> dan <b>Kuncir Kuda Keren</b>!' },
+      { customer: 'Putri Bintang (Idol Cantik) ✨', demand: 'Malam ini ada konser panggung! Berikan aku <b>Kostum Idol Panggung</b> dan <b>Telinga Kucing Imut</b>!' }
+    ];
+
+    let currentMissionIdx = 0;
+    missionBtn.addEventListener('click', () => {
+      playTone(650, 'sine', 0.1);
+      const m = customerMissions[currentMissionIdx];
+      document.getElementById('missionCustomer').innerText = `Pelanggan: ${m.customer}`;
+      document.getElementById('missionDemand').innerHTML = `"${m.demand}"`;
+      missionModal.style.display = 'flex';
+    });
+
+    closeMissionBtn.addEventListener('click', () => {
+      missionModal.style.display = 'none';
+    });
+
+    acceptMissionBtn.addEventListener('click', () => {
+      playChime();
+      missionModal.style.display = 'none';
+      setDialogue("Tantangan diterima! Ayo padukan gaya sesuai pesanan pelanggan! 🎯✨");
+      currentMissionIdx = (currentMissionIdx + 1) % customerMissions.length;
+    });
+
+    // --- 10. Help Modal ---
+    const helpModal = document.getElementById('helpModal');
+    const helpBtn = document.getElementById('helpBtn');
+    const closeHelpBtn = document.getElementById('closeHelpBtn');
+    const gotItHelpBtn = document.getElementById('gotItHelpBtn');
+
+    helpBtn.addEventListener('click', () => {
+      playTone(500, 'sine', 0.1);
+      helpModal.style.display = 'flex';
+    });
+    closeHelpBtn.addEventListener('click', () => {
+      helpModal.style.display = 'none';
+    });
+    gotItHelpBtn.addEventListener('click', () => {
+      playChime();
+      helpModal.style.display = 'none';
+    });
+
+    // Initial setup
+    renderDoll();
+    renderWorkstation();
+  </script>
+</body>
+</html>
